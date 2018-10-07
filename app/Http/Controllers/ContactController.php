@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contact;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class ContactController extends Controller
     {
         $id = Auth::id();
         $contacts = User::find($id)->contacts;
-        return view('contact/index', ['contacts' => $contacts]);
+        return view('contacts/index', ['contacts' => $contacts]);
     }
 
     /**
@@ -27,7 +28,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts/create');
     }
 
     /**
@@ -38,18 +39,21 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required_without:email',
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $contact = new Contact;
+
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->notes = $request->notes;
+        $contact->user_id = Auth::id();
+
+        $contact->save();
+
+        $request->session()->flash('status', 'Added contact. ');
+        return redirect('contacts');
     }
 
     /**
@@ -60,7 +64,7 @@ class ContactController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('contacts/create');
     }
 
     /**
@@ -78,11 +82,33 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int $id
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id, Request $request)
+    {
+        $contact = Contact::find($id);
+
+        $contact->delete();
+
+        $request->session()->flash('status', 'Deleted contact. ');
+
+        return redirect('contacts');
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function restore($id)
     {
-        //
+        $contact = Contact::find($id);
+
+        $contact->restore();
+
+        return view('contacts');
     }
 }

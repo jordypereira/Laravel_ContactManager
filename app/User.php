@@ -28,7 +28,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the contact for the user.
+     * Get the s for the user.
      */
     public function contacts()
     {
