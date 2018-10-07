@@ -18,5 +18,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('contacts', 'ContactController');
-Route::get('contacts/restore/{id}', 'ContactController@restore')->name('contacts.restore');
+Route::resource('contacts', 'ContactController')->middleware('auth');
+Route::get('contacts/restore/{id}', 'ContactController@restore')->name('contacts.restore')->middleware('auth');

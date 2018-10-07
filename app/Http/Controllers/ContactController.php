@@ -28,7 +28,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        return view('contacts/create');
+        return view('contacts/create', ['method' => 'create']);
     }
 
     /**
@@ -64,7 +64,8 @@ class ContactController extends Controller
      */
     public function edit($id)
     {
-        return view('contacts/create');
+        $contact = Contact::find($id);
+        return view('contacts/create', ['method' => 'edit', 'contact' => $contact]);
     }
 
     /**
@@ -76,7 +77,21 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required_without:email',
+        ]);
+
+        $contact = Contact::find($id);
+
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->notes = $request->notes;
+        $contact->user_id = Auth::id();
+
+        $contact->save();
+
+        $request->session()->flash('status', 'Edited contact ' . $request->name . '.');
+        return redirect('contacts');
     }
 
     /**
