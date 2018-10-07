@@ -11,8 +11,8 @@
     @foreach ($rows as $row)
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
-            @foreach ($row as $column)
-                <td>{{ $column }}</td>
+            @foreach ($headers as $column)
+                <td>{{ $row->$column }}</td>
             @endforeach
         </tr>
     @endforeach

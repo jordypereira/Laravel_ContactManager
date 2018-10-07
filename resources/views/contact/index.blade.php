@@ -14,7 +14,7 @@
                             </div>
                         @endif
 
-                        @component('components.table', ['headers' => ['Name', 'Email', 'Notes'], 'rows' => $contacts])
+                        @component('components.table', ['headers' => ['name', 'email', 'notes'], 'rows' => $contacts])
 
                         @endcomponent
                     </div>
