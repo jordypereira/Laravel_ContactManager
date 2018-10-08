@@ -26,3 +26,9 @@
     @endforeach
     </tbody>
 </table>
+
+@if($rows instanceof \Illuminate\Pagination\LengthAwarePaginator)
+<div>
+    {{ $rows->links() }}
+</div>
+@endif

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contact;
 use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,9 +17,15 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $id = Auth::id();
-        $contacts = User::find($id)->contacts;
-        return view('contacts/index', ['contacts' => $contacts]);
+        try {
+            $id = Auth::id();
+            $contacts = User::findOrFail($id)->contacts()->paginate(15);
+            // $contacts = Contact::Paginate(2);
+            return view('contacts/index', ['contacts' => $contacts]);
+        }
+        catch(ModelNotFoundException $exception) {
+            return redirect('/');
+        }
     }
 
     /**
